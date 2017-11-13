@@ -1,0 +1,90 @@
+Sub CleanReport()
+'
+' CleanReport Macro
+'
+'Macro to copy user name and user id into column 1 and 2.
+'This cleans up data from Synergy User Access Report exported as xlsx.
+'Deletes the blanks spaces and creates the column headings
+'
+'DDP 3/11/2017
+'
+'Declare variables
+Dim LastRow As Long
+Dim CurrentRow As Long
+Dim FirstRow As Long
+Dim i As Integer
+
+'Set inital values
+CurrentRow = 1
+FirstRow = CurrentRow
+'Insert 2 new columns for username and userid
+Range("A1").EntireColumn.Insert
+Range("A1").EntireColumn.Insert
+
+'Use existing first row as this is not needed
+'Create columns headings
+i = 1
+Do While i < 12
+Select Case i
+    Case Is = 1
+        Cells(CurrentRow, i).Value = "UserName"
+    Case Is = 2
+        Cells(CurrentRow, i).Value = "UserID"
+    Case Is = 3
+        Cells(CurrentRow, i).Value = "SystemCode"
+    Case Is = 4
+        Cells(CurrentRow, i).Value = "System Description"
+    Case Is = 5
+        Cells(CurrentRow, i).Value = "Aspect Code"
+    Case Is = 6
+        Cells(CurrentRow, i).Value = "Aspect Description"
+    Case Is = 7
+        Cells(CurrentRow, i).Value = "Tab"
+    Case Is = 8
+        Cells(CurrentRow, i).Value = "Add"
+    Case Is = 9
+        Cells(CurrentRow, i).Value = "Mod"
+    Case Is = 10
+        Cells(CurrentRow, i).Value = "Del"
+    Case Is = 11
+        Cells(CurrentRow, i).Value = "Qry"
+    Case Else
+        Cells(CurrentRow, i).Value = "Error"
+End Select
+i = i + 1
+Loop
+'Find the last row in the worksheet based on specific text
+LastRow = Cells.Find("End of USER PRIVILEGES report", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
+'Start block from row 2 in worksheet to avoid row headings on row 1
+CurrentRow = 2
+'Loop through rows until the last row is reached
+Do While CurrentRow <> LastRow
+  'Set first row = current row as this is the first non blank row in the block
+  FirstRow = CurrentRow
+  'While the current row is not blank
+  Do While Cells(CurrentRow, 3).Value <> ""
+    'Set first column to user name from firstrow column 3 in block
+    Cells(CurrentRow, 1).Value = Cells(FirstRow, 3).Value
+    'Set second column to user id from firstrow column 4 in block
+    Cells(CurrentRow, 2).Value = Cells(FirstRow, 4).Value
+    'Go to next row
+    CurrentRow = CurrentRow + 1
+  Loop
+  'Find the last row in the worksheet based on specific text now that the rows have been deleted
+  LastRow = Cells.Find("End of USER PRIVILEGES report", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
+  If CurrentRow <> LastRow Then
+    'Delete current row as this is blank
+    Rows(CurrentRow).EntireRow.Delete
+  End If
+  'delete the first row with column headings as this is no longer needed
+  Rows(FirstRow).EntireRow.Delete
+  'Current row is now 2 rows out so bring back 1 row
+  CurrentRow = CurrentRow - 1
+  'Find the last row in the worksheet based on specific text now that the rows have been deleted
+  LastRow = Cells.Find("End of USER PRIVILEGES report", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
+Loop
+  'Found last row so delete last 2 lines of report that are informational
+  Rows(CurrentRow).EntireRow.Delete
+  Rows(CurrentRow).EntireRow.Delete
+'
+End Sub
