@@ -8,6 +8,16 @@ Sub CleanReport()
 '
 'DDP 3/11/2017
 '
+' Instructions:
+' 1. Goto SynergySoft and login as account SUPER access
+' 2. Open the Users Module
+' 3. Search for all users
+' 4. Select All users and press user access report button
+' 5. Export this report to xlsx format
+' 6. Open the xlsx file and copy the data into Sheet1 cell A1
+' 7. Run the CleanReport macro
+' 8. Save the File as a new file .
+
 'Declare variables
 Dim LastRow As Long
 Dim CurrentRow As Long
